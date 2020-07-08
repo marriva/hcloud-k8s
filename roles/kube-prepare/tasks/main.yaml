@@ -9,11 +9,21 @@
 
 - name: Configure floating IPs
   template:
-    src: 60-floating-ip.j2
-    dest: /etc/network/interfaces.d/60-floating-ip.cfg
+    src: ifcfg-eth0:x.j2
+    dest: "/etc/sysconfig/network-scripts/ifcfg-eth0:{{ index }}"
+  vars:
+    ip: "{{ item }}"
+  loop: "{{ floating_ipv4 }}"
+  loop_control:
+    index_var: index
 
 - name: Restart Networking
-  shell: systemctl restart networking.service
+  shell: systemctl restart network
+
+- name: Create Kubernetes Service directory if it does not exist
+  file:
+    path: /etc/systemd/system/kubelet.service.d
+    state: directory
   
 - name: Copy cloud config provider flag for kubeadm
   copy:
@@ -35,20 +45,21 @@
 
 - name: Insert/Update sysctl settings for traffic forwarding
   blockinfile:
-    path: /etc/sysctl.conf
+    path: /etc/sysctl.d/k8s.conf
     block: |
       # Allow IP forwarding for kubernetes
       net.bridge.bridge-nf-call-iptables = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
       net.ipv4.ip_forward = 1
+      net.ipv6.conf.all.forwarding = 1
+    create: yes
 
 - name: Reload sysctl
-  shell: sysctl -p
+  shell: sysctl --system
 
 - name: Auto Mount BPF filesystem for cilium network plugin
-  blockinfile:
-    path: /etc/fstab
-    block: |
-      bpffs                      /sys/fs/bpf             bpf     defaults 0 0
-
-- name: Mount BPF filesystem for cilium network plugin
-  shell: mount /sys/fs/bpf
+  mount:
+    path: /sys/fs/bpf
+    src: bpffs
+    fstype: bpf
+    state: mounted

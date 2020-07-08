@@ -2,6 +2,12 @@ provider "hcloud" {
   token   = "${var.hcloud_token}"
 }
 
+resource "hcloud_ssh_key" "default" {
+  count = "${length(var.authorized_keys)}"
+  name = "ssh-key-${count.index}"
+  public_key = "${var.authorized_keys[count.index]}"
+}
+
 # Private Network and subnets
 resource "hcloud_network" "default" {
   name     = "kubernetes"
@@ -24,10 +30,11 @@ resource "hcloud_network_subnet" "worker" {
 
 resource "hcloud_server" "master" {
   count       = 1
-  name        = "master${count.index}"
-  image       = "ubuntu-18.04"
+  name        = "master-${count.index}"
+  image       = "${var.server_image}"
   server_type = "${var.master_servertype}"
   location    = "${var.datacenter}"
+  ssh_keys    = "${hcloud_ssh_key.default[*].id}"
   user_data   = "${file("./user-data/cloud-config.yaml")}"
 }
 
@@ -41,10 +48,11 @@ resource "hcloud_server_network" "master_network" {
 # Worker
 resource "hcloud_server" "worker" {
   count       = "${var.worker_count}"
-  name        = "worker${count.index}"
-  image       = "ubuntu-18.04"
+  name        = "worker-${count.index}"
+  image       = "${var.server_image}"
   server_type = "${var.worker_servertype}"
   location    = "${var.datacenter}"
+  ssh_keys    = "${hcloud_ssh_key.default[*].id}"
   user_data   = "${file("./user-data/cloud-config.yaml")}"
 }
 

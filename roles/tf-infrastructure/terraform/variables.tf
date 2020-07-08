@@ -5,9 +5,19 @@ variable "hcloud_token" {
   description = "Hetzner Cloud API Token - Replaced by Ansible Playbook on run"
 }
 
+variable "authorized_keys" {
+  type        = list(string)
+  description = "SSH Public Keys - Replaced by Ansible Playbook on run"
+}
+
 variable "datacenter" {
   type        = string
   description = "Datacenter Location - Replaced by Ansible Playbook on run"
+}
+
+variable "server_image" {
+  type        = string
+  description = "Server Image - Replaced by Ansible Playbook on run"
 }
 
 variable "master_servertype" {

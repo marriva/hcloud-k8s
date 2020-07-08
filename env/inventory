@@ -1,0 +1,12 @@
+[master]
+159.69.15.64
+
+[worker]
+159.69.15.65
+
+[allserver]
+159.69.15.64
+159.69.15.65
+
+[localhost]
+127.0.0.1  ansible_connection=local

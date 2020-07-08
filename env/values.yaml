@@ -1,17 +1,19 @@
 # Hetzner HCloud Project API Token
-hetzner_token: XXXXxxxxxXXxxx...
+hetzner_token: "{{ lookup('env', 'HCLOUD_TOKEN') }}"
 # Public SSH Keys to connect instances with ssh
 ssh_authorized_keys:
-  - ssh-rsa AAAAB3XXXXXxxxx== gammpamm@example.com
+  - "{{ lookup('file', '~/.ssh/hetzner.pub') }}"
 # Datacenter Name
-datacenter: fsn1
+datacenter: nbg1
+# OS image
+server_image: centos-7
 # Master and Worker Server Types
-master_servertype: cx21-ceph
-worker_servertype: cx31-ceph
+master_servertype: cx11
+worker_servertype: cx11
 # Count Worker Nodes
-worker_count: 3
+worker_count: 1
 # Count Pool IPs for Metal Load Balancer
-floatip_count: 4
+floatip_count: 1
 # Tested 1.15.5 and 1.16.2
-kubenetes_version: 1.16.2
-local_kube_context_path: /home/<YOUR-USER>/.kube
+kubenetes_version: 1.18.5
+local_kube_context_path: /Users/vm/.kube

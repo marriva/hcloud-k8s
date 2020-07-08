@@ -11,7 +11,9 @@
     state: present
     variables:
       hcloud_token: "{{ hetzner_token }}"
+      authorized_keys: "{{ ssh_authorized_keys | to_json }}"
       datacenter: "{{ datacenter }}"
+      server_image: "{{ server_image }}"
       master_servertype: "{{ master_servertype }}"
       worker_servertype: "{{ worker_servertype }}"
       worker_count: "{{ worker_count }}"

@@ -1,38 +1,41 @@
 #cloud-config
-users:
-  - name: k8s
-    groups: users, admin
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    shell: /bin/bash
-    ssh_authorized_keys:
-{% for key in ssh_authorized_keys %}
-      - {{ key }}
-{% endfor %}
+
+package_upgrade: true
+
+write_files:
+  # Install Docker repo
+  - content: |
+      [docker-ce-stable]
+      name=Docker CE Stable - $basearch
+      baseurl=https://download.docker.com/linux/centos/7/$basearch/stable
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://download.docker.com/linux/centos/gpg
+    path: /etc/yum.repos.d/docker-ce.repo
+  # Install Kubernetes repo
+  - content: |
+      [kubernetes]
+      name=Kubernetes
+      baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-$basearch
+      enabled=1
+      gpgcheck=1
+      repo_gpgcheck=1
+      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+    path: /etc/yum.repos.d/kubernetes.repo
+
 packages:
-  - apt-transport-https
-  - ca-certificates
-  - curl
-  - software-properties-common
-  - python
-  - iptables-persistent
-  - gnupg-agent
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - kubeadm-{{ kubenetes_version }}
+  - kubectl-{{ kubenetes_version }}
+  - kubelet-{{ kubenetes_version }}
+  - yum-plugin-versionlock
+
 runcmd:
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-  - curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-  - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-  - add-apt-repository "deb http://packages.cloud.google.com/apt/ kubernetes-xenial main"
-  - apt update
-  - swapoff -a
-  - apt install -y docker-ce kubelet={{ kubenetes_version }}-00 kubeadm={{ kubenetes_version }}-00 kubectl={{ kubenetes_version }}-00
-  - apt-mark hold docker-ce kubelet kubeadm kubectl
-  - usermod -aG docker k8s
-  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
-  - sed -i -e '/^PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
-  - sed -i -e '/^X11Forwarding/s/^.*$/X11Forwarding no/' /etc/ssh/sshd_config
-  - sed -i -e '/^#MaxAuthTries/s/^.*$/MaxAuthTries 2/' /etc/ssh/sshd_config
-  - sed -i -e '/^#AllowTcpForwarding/s/^.*$/AllowTcpForwarding no/' /etc/ssh/sshd_config
-  - sed -i -e '/^#AllowAgentForwarding/s/^.*$/AllowAgentForwarding no/' /etc/ssh/sshd_config
-  - sed -i -e '/^#AuthorizedKeysFile/s/^.*$/AuthorizedKeysFile .ssh/authorized_keys/' /etc/ssh/sshd_config
-  - sed -i '$a AllowUsers k8s' /etc/ssh/sshd_config
+  - yum -y install docker-ce kubeadm kubectl kubelet
+  - systemctl enable docker
+  - systemctl enable kubelet
+  - yum versionlock kube* docker-* containerd*
   - touch /opt/ready.txt
   - reboot
