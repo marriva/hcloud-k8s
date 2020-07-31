@@ -1,5 +1,8 @@
 # hcloud-k8s
 
+Updated to use Centos 7 nodes with Kubernetes v1.18.5 and Calico Network Plugin.
+MetalLB (Load Balancer) and floating IP failover is not supported yet.
+
 # unfortunately I have no time to maintain - please fork it
 
 Install a Kubernetes Cluster on Hetzner Cloud. The Playbook install a Master and Workers with Private Networking inclusive Cloud Controller Manager for Hetzner Cloud, Load Balancer and Failover IPs.

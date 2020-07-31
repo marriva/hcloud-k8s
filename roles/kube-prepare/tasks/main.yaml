@@ -57,9 +57,9 @@
 - name: Reload sysctl
   shell: sysctl --system
 
-- name: Auto Mount BPF filesystem for cilium network plugin
-  mount:
-    path: /sys/fs/bpf
-    src: bpffs
-    fstype: bpf
-    state: mounted
+# - name: Auto Mount BPF filesystem for cilium network plugin
+#   mount:
+#     path: /sys/fs/bpf
+#     src: bpffs
+#     fstype: bpf
+#     state: mounted

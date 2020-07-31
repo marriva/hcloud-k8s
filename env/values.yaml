@@ -16,4 +16,4 @@ worker_count: 1
 floatip_count: 1
 # Tested 1.15.5 and 1.16.2
 kubenetes_version: 1.18.5
-local_kube_context_path: /Users/vm/.kube
+local_kube_context_path: ~/.kube
