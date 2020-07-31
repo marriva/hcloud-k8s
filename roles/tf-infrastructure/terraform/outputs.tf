@@ -8,7 +8,7 @@ output "worker_ipv4" {
   value       = ["${hcloud_server.worker.*.ipv4_address}"]
 }
 
-output "floating_ipv4" {
-  description = "Map of floating ipv4"
-  value       = ["${hcloud_floating_ip.lbipv4.*.ip_address}"]
+output "lb_ipv4" {
+  description = "Map of load balancer ipv4"
+  value       = ["${hcloud_load_balancer.lbipv4.*.ipv4}"]
 }
