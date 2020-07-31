@@ -17,8 +17,6 @@
   #become: yes
   vars_files:
     - "env/values.yaml"
-  vars:
-    version_1_16: "{{ kubenetes_version is version('1.16.0', operator='>=', strict=True) }}"
   roles:
     - { role: kube-master, tags: kube-master }
 
@@ -29,19 +27,6 @@
   #become: yes
   roles:
     - { role: kube-worker, tags: kube-worker }
-
-- name: IP failover and Metal-LB Installation
-  hosts: localhost
-  gather_facts: false
-  become: false
-  vars_files:
-    - "env/values.yaml"
-    - "env/ips.yaml"
-  vars:
-    version_1_16: "{{ kubenetes_version is version('1.16.0', operator='>=', strict=True) }}"
-  roles:
-    - { role: ip-failover, tags: ip-failover, when: false }
-    - { role: metal-lb, tags: metal-lb, when: false }
 
 - name: Local Cleanup
   hosts: localhost

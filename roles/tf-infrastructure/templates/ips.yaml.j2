@@ -10,9 +10,3 @@ worker_ips:
   - {{ ip }}
 {% endfor %}
 {% endfor %}
-lb_ipv4:
-{% for lbs in tf.outputs.lb_ipv4.value %}
-{% for ip in lbs %}
-  - {{ ip }}
-{% endfor %}
-{% endfor %}

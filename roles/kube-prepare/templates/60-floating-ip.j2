@@ -1,7 +1,0 @@
-{% for ip in floating_ipv4 %}
-auto eth0:{{loop.index}}
-iface eth0:{{loop.index}} inet static
-  address {{ ip }}
-  netmask 32
-
-{% endfor %}

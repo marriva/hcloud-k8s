@@ -34,8 +34,3 @@ variable "worker_count" {
   type        = number
   description = "Worker count - Replaced by Ansible Playbook on run"
 }
-
-variable "floatip_count" {
-  type        = number
-  description = "Floating IPs count - Replaced by Ansible Playbook on run"
-}

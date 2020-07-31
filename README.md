@@ -1,19 +1,19 @@
 # hcloud-k8s
 
 Updated to use Centos 7 nodes with Kubernetes v1.18.5 and Calico Network Plugin.
-MetalLB (Load Balancer) and floating IP failover is not supported yet.
+Hetzner Load Balancer beta is supported.
 
 
 ## Guide
 Install a Kubernetes Cluster on Hetzner Cloud. The Playbook install a Master and Workers with Private Networking inclusive Cloud Controller Manager for Hetzner Cloud, Load Balancer and Failover IPs.
 
-Tested Versions Kubernetes v1.15.5 and v1.16.2 and v1.18.5
+Tested Versions Kubernetes ~~v1.15.5~~ and ~~v1.16.2~~ and v1.18.6
 
 ## Local Requirements
-  - Ansible v2.8.5 (https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-  - Terraform v0.12.10 (https://github.com/tfutils/tfenv#installation)
-  - Helm v2.14.3 (https://github.com/helm/helm#install)
-  - Kubectl v1.16.2 (https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+  - Ansible ~~v2.8.5~~ v2.9.11 (https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+  - Terraform ~~v0.12.10~~ v0.12.29 (https://github.com/tfutils/tfenv#installation)
+  - ~~Helm v2.14.3 (https://github.com/helm/helm#install)~~
+  - Kubectl ~~v1.16.2~~ v1.18.6 (https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ## Prerequirments edit the following files
   - create a HCloud Project in Hetzner Cloud Console
@@ -54,9 +54,9 @@ The Playbook execute Terraform and destroy the resources (Delete Instances, Floa
   - Prepare Kubernetes Tools and Configuration on all Servers
   - Install Master-Node
   - Join Worker-Nodes to Master
-  - Install Metal Load Balancer and IP failover Configuration (FIP)
-    - [MetalLB](https://metallb.universe.tf/)
-    - [Hetzner Cloud floating IP controller](https://github.com/cbeneke/hcloud-fip-controller)
+  - ~~Install Metal Load Balancer and IP failover Configuration (FIP)~~
+    - ~~[MetalLB](https://metallb.universe.tf/)~~
+    - ~~[Hetzner Cloud floating IP controller](https://github.com/cbeneke/hcloud-fip-controller)~~
   - Cleanup
 
 ## Caution Security
@@ -67,7 +67,7 @@ The Playbook execute Terraform and destroy the resources (Delete Instances, Floa
 
 ### Info MetalLB
 
-Hetzner Cloud does not support LoadBalancer as a Service (yet). Thus [MetalLB](https://metallb.universe.tf/) will be installed to make the LoadBalancer service type available in the cluster.
+~~Hetzner Cloud does not support LoadBalancer as a Service (yet)~~. Thus [MetalLB](https://metallb.universe.tf/) will be installed to make the LoadBalancer service type available in the cluster.
 
 > A Kubernetes LoadBalancer is typically managed by the cloud controller, but it is not implemented in the hcloud cloud controller (because its not supported by Hetzner Cloud). MetalLB is a project, which provides the LoadBalancer type for baremetal Kubernetes clusters. It announces changes of the IP address endpoint to neighbor-routers, but we will just make use of the LoadBalancer provision in the cluster.
 

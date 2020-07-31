@@ -11,9 +11,7 @@ server_image: centos-7
 master_servertype: cx11
 worker_servertype: cx11
 # Count Worker Nodes
-worker_count: 3
-# Count Pool IPs for Metal Load Balancer
-floatip_count: 0
+worker_count: 2
 # Tested 1.15.5 and 1.16.2
-kubenetes_version: 1.18.5
+kubenetes_version: 1.18.6
 local_kube_context_path: ~/.kube

@@ -37,18 +37,6 @@
     url: https://raw.githubusercontent.com/hetznercloud/hcloud-cloud-controller-manager/master/deploy/v1.6.1-networks.yaml
     dest: /tmp/k8s-install/hcloud-controller.yaml
 
-# - name: Copy yaml cloud-controller-manager for Hetzner Cloud Kubernetes Version > 1.16
-#   copy:
-#     url: "{{ playbook_dir }}/roles/kube-master/files/hcloud-controller_v1.16.yaml"
-#     dest: /tmp/k8s-install/hcloud-controller.yaml
-#   when: version_1_16
-
-# - name: Copy yaml cloud-controller-manager for Hetzner Cloud Kubernetes Version < 1.16
-#   copy:
-#     src: "{{ playbook_dir }}/roles/kube-master/files/hcloud-controller.yaml"
-#     dest: /tmp/k8s-install/hcloud-controller.yaml
-#   when: not version_1_16
-
 - name: Deploy Hetzner Cloud Controller Manager
   shell: kubectl apply -f /tmp/k8s-install/hcloud-controller.yaml
 
@@ -59,14 +47,6 @@
 
 - name: Deploy Calico Network Plugin
   shell: kubectl apply -f /tmp/k8s-install/calico.yaml
-
-# - name: Copy yaml Cilium Network Plugin
-#   get_url:
-#     url: https://raw.githubusercontent.com/cilium/cilium/v1.7.6/install/kubernetes/quick-install.yaml
-#     dest: /tmp/k8s-install/cilium.yaml
-
-# - name: Deploy Cilium Network Plugin
-#   shell: kubectl apply -f /tmp/k8s-install/cilium.yaml
 
 - name: Create a CSI Hetzner Secret object
   shell: kubectl -n kube-system create secret generic hcloud-csi --from-literal=network=kubernetes --from-literal=token="{{ hetzner_token }}"

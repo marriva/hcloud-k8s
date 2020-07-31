@@ -62,22 +62,3 @@ resource "hcloud_server_network" "worker_network" {
   server_id  = hcloud_server.worker.*.id[count.index]
   ip         = "10.0.2.${count.index + 2}"
 }
-
-resource "hcloud_load_balancer" "lbipv4" {
-  name       = "load-balancer"
-  load_balancer_type = "lb11"
-  location   = var.datacenter
-}
-
-resource "hcloud_load_balancer_network" "default" {
-  load_balancer_id = hcloud_load_balancer.lbipv4.id
-  subnet_id = hcloud_network_subnet.worker.id
-  ip = "10.0.2.1"
-}
-
-resource "hcloud_load_balancer_target" "load_balancer_target" {
-  count            = length(hcloud_server.worker)
-  type             = "server"
-  load_balancer_id = hcloud_load_balancer.lbipv4.id
-  server_id        = hcloud_server.worker.*.id[count.index]
-}
