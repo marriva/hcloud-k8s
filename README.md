@@ -1,6 +1,7 @@
 # hcloud-k8s
 
-Updated to use Centos 7 nodes with Kubernetes v1.18.5 and Calico Network Plugin.
+Updated to use Centos 7 nodes with Kubernetes v1.18.5 and [Calico Network Plugin](https://www.projectcalico.org/calico-networking-for-kubernetes/).
+
 Hetzner Load Balancer beta is [supported](https://github.com/hetznercloud/hcloud-cloud-controller-manager/pull/49).
 
 
@@ -65,16 +66,17 @@ The Playbook execute Terraform and destroy the resources (Delete Instances, ~~Fl
   - No pod policy - privileged pods are allowed
   - Instances/Cluster not secured by a VPC (also have public IPs)
 
-### Info MetalLB
+### ~~Info MetalLB~~
 
-~~Hetzner Cloud does not support LoadBalancer as a Service (yet)~~. https://github.com/hetznercloud/hcloud-cloud-controller-manager/pull/49
+~~Hetzner Cloud does not support LoadBalancer as a Service (yet)~~. Now [supported](https://github.com/hetznercloud/hcloud-cloud-controller-manager/pull/49).
+
 ~~Thus [MetalLB](https://metallb.universe.tf/) will be installed to make the LoadBalancer service type available in the cluster.~~
 
 > A Kubernetes LoadBalancer is typically managed by the cloud controller, ~~but it is not implemented in the hcloud cloud controller (because its not supported by Hetzner Cloud). MetalLB is a project, which provides the LoadBalancer type for baremetal Kubernetes clusters. It announces changes of the IP address endpoint to neighbor-routers, but we will just make use of the LoadBalancer provision in the cluster.~~
 
 ~~This will configure MetalLB to use the IPv4 floating IP as LoadBalancer IP. MetalLB can reuse IPs for multiple LoadBalancer services if some [conditions](https://metallb.universe.tf/usage/#ip-address-sharing) are met. This can be enabled by adding an annotation `metallb.universe.tf/allow-shared-ip` to the service.~~
 
-### Info floating IP failover
+### ~~Info floating IP failover~~
 
 ~~As the floating IP is bound to one server only I wrote a little controller, which will run in the cluster and reassign the floating IP to another server, if the currently assigned node becomes NotReady.~~
 
