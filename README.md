@@ -1,11 +1,11 @@
 # hcloud-k8s
 
 Updated to use Centos 7 nodes with Kubernetes v1.18.5 and Calico Network Plugin.
-Hetzner Load Balancer beta is supported.
+Hetzner Load Balancer beta is [supported](https://github.com/hetznercloud/hcloud-cloud-controller-manager/pull/49).
 
 
 ## Guide
-Install a Kubernetes Cluster on Hetzner Cloud. The Playbook install a Master and Workers with Private Networking inclusive Cloud Controller Manager for Hetzner Cloud, Load Balancer and Failover IPs.
+Install a Kubernetes Cluster on Hetzner Cloud. The Playbook install a Master and Workers with Private Networking inclusive Cloud Controller Manager for Hetzner Cloud, Load Balancer and ~~Failover IPs~~.
 
 Tested Versions Kubernetes ~~v1.15.5~~ and ~~v1.16.2~~ and v1.18.6
 
@@ -47,7 +47,7 @@ ansible-playbook get-kubeconfig.yaml -i env/inventory
 ```bash
 ansible-playbook destroy-infrastructure.yaml
 ```
-The Playbook execute Terraform and destroy the resources (Delete Instances, Floating IPs, Networks). The working directory is "roles/tf-infrastructure/terraform/"
+The Playbook execute Terraform and destroy the resources (Delete Instances, ~~Floating IPs~~, Networks). The working directory is "roles/tf-infrastructure/terraform/"
 
 ## What's happening
   - Create Infrastructure on Hetzner Cloud with Terraform (roles/tf-infrastructure/terraform/)
@@ -67,21 +67,22 @@ The Playbook execute Terraform and destroy the resources (Delete Instances, Floa
 
 ### Info MetalLB
 
-~~Hetzner Cloud does not support LoadBalancer as a Service (yet)~~. Thus [MetalLB](https://metallb.universe.tf/) will be installed to make the LoadBalancer service type available in the cluster.
+~~Hetzner Cloud does not support LoadBalancer as a Service (yet)~~. https://github.com/hetznercloud/hcloud-cloud-controller-manager/pull/49
+~~Thus [MetalLB](https://metallb.universe.tf/) will be installed to make the LoadBalancer service type available in the cluster.~~
 
-> A Kubernetes LoadBalancer is typically managed by the cloud controller, but it is not implemented in the hcloud cloud controller (because its not supported by Hetzner Cloud). MetalLB is a project, which provides the LoadBalancer type for baremetal Kubernetes clusters. It announces changes of the IP address endpoint to neighbor-routers, but we will just make use of the LoadBalancer provision in the cluster.
+> A Kubernetes LoadBalancer is typically managed by the cloud controller, ~~but it is not implemented in the hcloud cloud controller (because its not supported by Hetzner Cloud). MetalLB is a project, which provides the LoadBalancer type for baremetal Kubernetes clusters. It announces changes of the IP address endpoint to neighbor-routers, but we will just make use of the LoadBalancer provision in the cluster.~~
 
-This will configure MetalLB to use the IPv4 floating IP as LoadBalancer IP. MetalLB can reuse IPs for multiple LoadBalancer services if some [conditions](https://metallb.universe.tf/usage/#ip-address-sharing) are met. This can be enabled by adding an annotation `metallb.universe.tf/allow-shared-ip` to the service.
+~~This will configure MetalLB to use the IPv4 floating IP as LoadBalancer IP. MetalLB can reuse IPs for multiple LoadBalancer services if some [conditions](https://metallb.universe.tf/usage/#ip-address-sharing) are met. This can be enabled by adding an annotation `metallb.universe.tf/allow-shared-ip` to the service.~~
 
 ### Info floating IP failover
 
-As the floating IP is bound to one server only I wrote a little controller, which will run in the cluster and reassign the floating IP to another server, if the currently assigned node becomes NotReady.
+~~As the floating IP is bound to one server only I wrote a little controller, which will run in the cluster and reassign the floating IP to another server, if the currently assigned node becomes NotReady.~~
 
-> If you do not ensure, that the floating IP is always associated to a node in status Ready your cluster will not be high available, as the traffic can be routed to a (potentially) broken node.
+> ~~If you do not ensure, that the floating IP is always associated to a node in status Ready your cluster will not be high available, as the traffic can be routed to a (potentially) broken node.~~
 
 [Hetzner Cloud floating IP controller](https://github.com/cbeneke/hcloud-fip-controller)
 
-> If you did not set up the hcloud cloud controller, the external IP of the nodes might be announced as internalIP of the nodes in the Kubernetes cluster. In that event you must change `nodeAddressType` in the config to `internal` for the floating IP controller to work correctly.
+> ~~If you did not set up the hcloud cloud controller, the external IP of the nodes might be announced as internalIP of the nodes in the Kubernetes cluster. In that event you must change `nodeAddressType` in the config to `internal` for the floating IP controller to work correctly.~~
 
 Please be aware, that the project is still in development and the config might be changed drastically in the future. Refer to the [GitHub repository](https://github.com/cbeneke/hcloud-fip-controller) for config options etc.
 
